@@ -150,6 +150,122 @@
     .output .gray { color: #888; }
     .output .yellow { color: #dcdcaa; }
 
+    /* Practice */
+    .score-bar {
+      background: #f1f8ff;
+      border: 1px solid #c8e1ff;
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin: 16px 0 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+    }
+    .score-bar button {
+      background: #0366d6;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    .score-bar button:hover { background: #0256bf; }
+    .question {
+      background: white;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin: 16px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .question .q-num {
+      font-size: 0.8em;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .question .q-text {
+      font-weight: 500;
+      margin: 6px 0 14px 0;
+      font-size: 1.02em;
+    }
+    .choices { display: flex; flex-direction: column; gap: 8px; }
+    .choice {
+      background: #f6f8fa;
+      border: 1px solid #d1d5da;
+      border-radius: 4px;
+      padding: 10px 14px;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.95em;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .choice:hover:not(:disabled) {
+      background: #e1e4e8;
+      border-color: #959da5;
+    }
+    .choice:disabled { cursor: not-allowed; opacity: 0.85; }
+    .choice.correct {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+    .choice.wrong {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+    .choice code {
+      background: rgba(0,0,0,0.06);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .text-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d5da;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95em;
+      box-sizing: border-box;
+    }
+    .text-input:focus { outline: none; border-color: #0366d6; }
+    .submit-btn {
+      margin-top: 10px;
+      background: #0366d6;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+    .submit-btn:hover { background: #0256bf; }
+    .submit-btn:disabled { background: #999; cursor: not-allowed; }
+    .feedback {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 0.95em;
+      display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.correct {
+      background: #d4edda;
+      border-left: 4px solid #28a745;
+      color: #155724;
+    }
+    .feedback.wrong {
+      background: #f8d7da;
+      border-left: 4px solid #dc3545;
+      color: #721c24;
+    }
+    .feedback code { background: rgba(0,0,0,0.08); padding: 1px 5px; border-radius: 3px; }
+
     footer { margin-top: 60px; color: #888; font-size: 0.9em; text-align: center; }
   </style>
 </head>
@@ -161,6 +277,7 @@
     <button class="tab-btn active" onclick="showTab('basics')">Basics</button>
     <button class="tab-btn" onclick="showTab('glossary')">Glossary</button>
     <button class="tab-btn" onclick="showTab('examples')">Examples</button>
+    <button class="tab-btn" onclick="showTab('practice')">Practice</button>
   </div>
 
   <!-- BASICS TAB -->
@@ -463,6 +580,18 @@ Fast-forward
     </div>
   </div>
 
+  <!-- PRACTICE TAB -->
+  <div id="practice" class="tab-panel">
+    <p>Test what you've learned. Pick the right answer or type the right command — get instant feedback.</p>
+
+    <div class="score-bar">
+      <span>Score: <span id="score">0</span> / <span id="total">10</span></span>
+      <button onclick="resetQuiz()">Reset</button>
+    </div>
+
+    <div id="quiz"></div>
+  </div>
+
   <footer>
   </footer>
 
@@ -473,6 +602,164 @@ Fast-forward
       document.getElementById(id).classList.add('active');
       event.target.classList.add('active');
     }
+
+    // ===== Practice Quiz =====
+    const questions = [
+      {
+        type: 'choice',
+        q: 'You just edited a file. Which command shows what changed?',
+        choices: ['git push', 'git status', 'git commit', 'git clone'],
+        answer: 1,
+        explain: '<code>git status</code> tells you which files are modified, staged, or untracked. Always run it first when you\'re unsure what\'s going on.'
+      },
+      {
+        type: 'choice',
+        q: 'What does the <code>-m</code> flag do in <code>git commit -m "..."</code>?',
+        choices: ['Marks the commit as merged', 'Adds a message to the commit', 'Modifies the previous commit', 'Makes it the main branch'],
+        answer: 1,
+        explain: '<code>-m</code> stands for "message". Without it, Git opens an editor and asks you to write one.'
+      },
+      {
+        type: 'fill',
+        q: 'Type the command to download a repo from GitHub. (Example URL: https://github.com/user/repo.git)',
+        answer: ['git clone https://github.com/user/repo.git', 'git clone'],
+        placeholder: 'git clone ...',
+        explain: '<code>git clone &lt;url&gt;</code> creates a local copy of the repo with full history.'
+      },
+      {
+        type: 'choice',
+        q: 'You ran <code>git add .</code> by mistake. How do you unstage a file?',
+        choices: ['git remove &lt;file&gt;', 'git restore --staged &lt;file&gt;', 'git unadd &lt;file&gt;', 'git reset --hard'],
+        answer: 1,
+        explain: '<code>git restore --staged &lt;file&gt;</code> removes a file from staging without losing your changes. <code>git reset --hard</code> would also work but it WIPES your changes — dangerous.'
+      },
+      {
+        type: 'fill',
+        q: 'Type the command to create a new branch called <code>feature-login</code> AND switch to it.',
+        answer: ['git checkout -b feature-login', 'git switch -c feature-login'],
+        placeholder: 'git ...',
+        explain: 'Both work: <code>git checkout -b name</code> (classic) or <code>git switch -c name</code> (modern). The <code>-b</code>/<code>-c</code> means "create".'
+      },
+      {
+        type: 'choice',
+        q: 'You merged a branch into main. The branch is gone — but where are the commits now?',
+        choices: ['Deleted forever', 'Stored in a backup folder', 'Now part of main\'s history', 'Stashed temporarily'],
+        answer: 2,
+        explain: 'Merging copies the branch\'s commits into main. Deleting the branch only removes the label — the commits stay in main\'s history.'
+      },
+      {
+        type: 'fill',
+        q: 'Type the command to send your local commits to GitHub.',
+        answer: ['git push'],
+        placeholder: 'git ...',
+        explain: '<code>git push</code> uploads your commits to the remote (usually GitHub). If the branch is new, you need <code>git push -u origin &lt;branch&gt;</code> the first time.'
+      },
+      {
+        type: 'choice',
+        q: 'Scenario: You\'re on <code>main</code> and want to grab someone else\'s changes from GitHub. What do you run?',
+        choices: ['git pull', 'git fetch', 'git download', 'git sync'],
+        answer: 0,
+        explain: '<code>git pull</code> downloads remote changes AND merges them into your current branch in one step.'
+      },
+      {
+        type: 'choice',
+        q: 'Which is the correct order for saving and uploading a change?',
+        choices: [
+          'push → commit → add',
+          'commit → add → push',
+          'add → commit → push',
+          'add → push → commit'
+        ],
+        answer: 2,
+        explain: 'The 3-step ritual: <code>add</code> (stage) → <code>commit</code> (save snapshot locally) → <code>push</code> (upload to GitHub).'
+      },
+      {
+        type: 'fill',
+        q: 'Type the command to safely delete a local branch named <code>old-feature</code>.',
+        answer: ['git branch -d old-feature'],
+        placeholder: 'git ...',
+        explain: '<code>-d</code> = safe delete (refuses if unmerged). <code>-D</code> (capital) = force delete — use only if you really want to throw away unmerged work.'
+      }
+    ];
+
+    let answered = new Array(questions.length).fill(false);
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz');
+      container.innerHTML = '';
+      questions.forEach((q, i) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        if (q.type === 'choice') {
+          div.innerHTML = `
+            <div class="q-num">Question ${i + 1}</div>
+            <div class="q-text">${q.q}</div>
+            <div class="choices">
+              ${q.choices.map((c, ci) => `<button class="choice" onclick="answerChoice(${i}, ${ci})">${c}</button>`).join('')}
+            </div>
+            <div class="feedback" id="fb-${i}"></div>
+          `;
+        } else {
+          div.innerHTML = `
+            <div class="q-num">Question ${i + 1}</div>
+            <div class="q-text">${q.q}</div>
+            <input type="text" class="text-input" id="input-${i}" placeholder="${q.placeholder}" onkeydown="if(event.key==='Enter')answerFill(${i})">
+            <button class="submit-btn" onclick="answerFill(${i})">Check</button>
+            <div class="feedback" id="fb-${i}"></div>
+          `;
+        }
+        container.appendChild(div);
+      });
+      document.getElementById('total').textContent = questions.length;
+    }
+
+    function answerChoice(qi, ci) {
+      if (answered[qi]) return;
+      answered[qi] = true;
+      const q = questions[qi];
+      const buttons = document.querySelectorAll(`#quiz .question:nth-child(${qi + 1}) .choice`);
+      buttons.forEach((b, bi) => {
+        b.disabled = true;
+        if (bi === q.answer) b.classList.add('correct');
+        else if (bi === ci) b.classList.add('wrong');
+      });
+      const correct = ci === q.answer;
+      showFeedback(qi, correct, q.explain);
+      if (correct) updateScore(1);
+    }
+
+    function answerFill(qi) {
+      if (answered[qi]) return;
+      const input = document.getElementById(`input-${qi}`);
+      const userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ' ');
+      const q = questions[qi];
+      const correct = q.answer.some(a => a.toLowerCase().replace(/\s+/g, ' ') === userAnswer);
+      answered[qi] = true;
+      input.disabled = true;
+      input.parentElement.querySelector('.submit-btn').disabled = true;
+      input.style.borderColor = correct ? '#28a745' : '#dc3545';
+      showFeedback(qi, correct, q.explain + (correct ? '' : `<br><br><strong>Correct answer:</strong> <code>${q.answer[0]}</code>`));
+      if (correct) updateScore(1);
+    }
+
+    function showFeedback(qi, correct, text) {
+      const fb = document.getElementById(`fb-${qi}`);
+      fb.className = 'feedback show ' + (correct ? 'correct' : 'wrong');
+      fb.innerHTML = (correct ? '✓ Correct! ' : '✗ Not quite. ') + text;
+    }
+
+    function updateScore(delta) {
+      const el = document.getElementById('score');
+      el.textContent = parseInt(el.textContent) + delta;
+    }
+
+    function resetQuiz() {
+      answered = new Array(questions.length).fill(false);
+      document.getElementById('score').textContent = '0';
+      renderQuiz();
+    }
+
+    renderQuiz();
   </script>
 </body>
 </html>
