@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git & GitHub — The Stuck Beginner's Guide</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 760px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      color: #222;
+      background: #fafafa;
+    }
+    h1 { color: #0366d6; margin-bottom: 4px; }
+    .subtitle { color: #666; margin-top: 0; }
+    h2 { border-bottom: 2px solid #eee; padding-bottom: 6px; margin-top: 36px; }
+    code {
+      background: #f1f1f1;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.95em;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+    pre code { background: none; padding: 0; color: inherit; }
+    .tip {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 12px 16px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid #ddd;
+      margin: 30px 0 20px;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .tab-btn:hover { color: #0366d6; }
+    .tab-btn.active {
+      color: #0366d6;
+      border-bottom-color: #0366d6;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Glossary table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    th, td {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    th {
+      background: #f6f8fa;
+      font-weight: 600;
+      color: #444;
+    }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { white-space: nowrap; }
+
+    .glossary-section { margin-top: 30px; }
+    .glossary-section h3 {
+      color: #0366d6;
+      margin-bottom: 8px;
+    }
+
+    /* Examples */
+    .example {
+      background: white;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin: 18px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .example h3 {
+      margin: 0 0 6px 0;
+      color: #0366d6;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 1.05em;
+    }
+    .example .scenario {
+      color: #666;
+      font-style: italic;
+      margin: 0 0 12px 0;
+      font-size: 0.95em;
+    }
+    .example .label {
+      font-size: 0.8em;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #888;
+      letter-spacing: 0.5px;
+      margin: 14px 0 4px 0;
+    }
+    .example .effect {
+      background: #e6f4ea;
+      border-left: 4px solid #34a853;
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin-top: 8px;
+      font-size: 0.95em;
+    }
+    .example .effect strong { color: #137333; }
+    .output {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px 14px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.88em;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+    .output .green { color: #6ec06e; }
+    .output .red { color: #f48771; }
+    .output .gray { color: #888; }
+    .output .yellow { color: #dcdcaa; }
+
+    footer { margin-top: 60px; color: #888; font-size: 0.9em; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>Git & GitHub</h1>
+  <p class="subtitle">The Stuck Beginner's Guide</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('basics')">Basics</button>
+    <button class="tab-btn" onclick="showTab('glossary')">Glossary</button>
+    <button class="tab-btn" onclick="showTab('examples')">Examples</button>
+  </div>
+
+  <!-- BASICS TAB -->
+  <div id="basics" class="tab-panel active">
+    <p>Stuck on Git? You're not alone. This page covers the only 6 commands you actually need to start.</p>
+
+    <h2>1. Get a copy of a repo</h2>
+    <pre><code>git clone https://github.com/user/repo.git</code></pre>
+    <p>Downloads the project to your computer.</p>
+
+    <h2>2. See what changed</h2>
+    <pre><code>git status</code></pre>
+    <p>Shows which files you've edited, added, or deleted.</p>
+
+    <h2>3. Save your changes (the 3-step ritual)</h2>
+    <pre><code>git add .
+git commit -m "describe what you changed"
+git push</code></pre>
+    <p><strong>add</strong> = pick what to save · <strong>commit</strong> = save it · <strong>push</strong> = send to GitHub.</p>
+
+    <h2>4. Get other people's changes</h2>
+    <pre><code>git pull</code></pre>
+
+    <h2>5. Work on something new without breaking main</h2>
+    <pre><code>git checkout -b my-new-thing</code></pre>
+    <p>Creates a branch — a safe sandbox. Mess up? Just delete the branch.</p>
+
+    <div class="tip">
+      <strong>Stuck tip:</strong> 90% of Git problems are fixed by running <code>git status</code> first. It usually tells you exactly what to do next.
+    </div>
+  </div>
+
+  <!-- GLOSSARY TAB -->
+  <div id="glossary" class="tab-panel">
+    <p>Every Git command and concept explained in plain English.</p>
+
+    <div class="glossary-section">
+      <h3>Core concepts</h3>
+      <table>
+        <thead>
+          <tr><th>Term</th><th>What it means</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>repo</code></td><td>Short for "repository" — your project folder tracked by Git.</td></tr>
+          <tr><td><code>commit</code></td><td>A saved snapshot of your changes. Each one has a unique ID (hash).</td></tr>
+          <tr><td><code>branch</code></td><td>A separate timeline of commits. Lets you experiment without breaking <code>main</code>.</td></tr>
+          <tr><td><code>main</code></td><td>The default branch — your project's "official" version.</td></tr>
+          <tr><td><code>origin</code></td><td>Nickname for the remote repo on GitHub.</td></tr>
+          <tr><td><code>HEAD</code></td><td>A pointer to the commit you're currently on.</td></tr>
+          <tr><td><code>staging area</code></td><td>The waiting room for changes before you commit them. <code>git add</code> puts files here.</td></tr>
+          <tr><td><code>remote</code></td><td>A version of your repo hosted somewhere else (usually GitHub).</td></tr>
+          <tr><td><code>merge</code></td><td>Combine the changes from one branch into another.</td></tr>
+          <tr><td><code>pull request (PR)</code></td><td>A GitHub feature: propose your branch's changes to be merged.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glossary-section">
+      <h3>Everyday commands</h3>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>git clone &lt;url&gt;</code></td><td>Download a repo from GitHub to your computer.</td></tr>
+          <tr><td><code>git status</code></td><td>Show what's changed, staged, or untracked.</td></tr>
+          <tr><td><code>git add &lt;file&gt;</code></td><td>Stage a file for the next commit.</td></tr>
+          <tr><td><code>git add .</code></td><td>Stage everything that changed.</td></tr>
+          <tr><td><code>git commit -m "msg"</code></td><td>Save staged changes with a message.</td></tr>
+          <tr><td><code>git push</code></td><td>Send local commits to GitHub.</td></tr>
+          <tr><td><code>git pull</code></td><td>Get changes from GitHub into your local copy.</td></tr>
+          <tr><td><code>git log</code></td><td>Show commit history.</td></tr>
+          <tr><td><code>git log --oneline</code></td><td>Compact one-line-per-commit view.</td></tr>
+          <tr><td><code>git diff</code></td><td>Show line-by-line what you've changed.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glossary-section">
+      <h3>Branching commands</h3>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>git branch</code></td><td>List your local branches.</td></tr>
+          <tr><td><code>git branch -r</code></td><td>List remote branches.</td></tr>
+          <tr><td><code>git checkout &lt;branch&gt;</code></td><td>Switch to an existing branch.</td></tr>
+          <tr><td><code>git checkout -b &lt;name&gt;</code></td><td>Create a new branch and switch to it.</td></tr>
+          <tr><td><code>git switch &lt;branch&gt;</code></td><td>Newer way to switch branches.</td></tr>
+          <tr><td><code>git merge &lt;branch&gt;</code></td><td>Merge another branch into your current one.</td></tr>
+          <tr><td><code>git branch -d &lt;name&gt;</code></td><td>Delete a local branch (safe — refuses if unmerged).</td></tr>
+          <tr><td><code>git push origin --delete &lt;name&gt;</code></td><td>Delete a branch on GitHub.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glossary-section">
+      <h3>Undo & rescue</h3>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>git restore &lt;file&gt;</code></td><td>Throw away unstaged changes to a file.</td></tr>
+          <tr><td><code>git restore --staged &lt;file&gt;</code></td><td>Unstage a file (undoes <code>git add</code>).</td></tr>
+          <tr><td><code>git revert &lt;hash&gt;</code></td><td>Create a new commit that undoes a previous one. Safe for shared history.</td></tr>
+          <tr><td><code>git reset --hard &lt;hash&gt;</code></td><td>⚠️ Wipe local changes back to a commit. Destructive — use with care.</td></tr>
+          <tr><td><code>git stash</code></td><td>Temporarily shelve uncommitted changes so you can switch branches.</td></tr>
+          <tr><td><code>git stash pop</code></td><td>Bring stashed changes back.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glossary-section">
+      <h3>Setup & config</h3>
+      <table>
+        <thead>
+          <tr><th>Command</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>git init</code></td><td>Turn a regular folder into a Git repo.</td></tr>
+          <tr><td><code>git config --global user.name "Name"</code></td><td>Set your commit author name.</td></tr>
+          <tr><td><code>git config --global user.email "you@x.com"</code></td><td>Set your commit author email.</td></tr>
+          <tr><td><code>.gitignore</code></td><td>A file listing things Git should never track (secrets, build files).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="glossary-section">
+      <h3>Common flags</h3>
+      <table>
+        <thead>
+          <tr><th>Flag</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>-m</code></td><td>Message (used with commit)</td></tr>
+          <tr><td><code>-b</code></td><td>Create a new branch (used with checkout)</td></tr>
+          <tr><td><code>-u</code></td><td>Set upstream — link local branch to remote</td></tr>
+          <tr><td><code>-d</code></td><td>Delete (safe)</td></tr>
+          <tr><td><code>-D</code></td><td>Force delete (dangerous)</td></tr>
+          <tr><td><code>--global</code></td><td>Apply to all your repos, not just this one</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- EXAMPLES TAB -->
+  <div id="examples" class="tab-panel">
+    <p>Real scenarios — what you type, what Git shows, and what actually changes.</p>
+
+    <div class="example">
+      <h3>git clone</h3>
+      <p class="scenario">Scenario: You want to download an existing repo to your computer.</p>
+      <div class="label">You run:</div>
+      <pre><code>git clone https://github.com/winrt-pin/First-work_1.git</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">Cloning into 'First-work_1'...
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+Receiving objects: 100% (3/3), done.</div>
+      <div class="effect"><strong>Effect:</strong> A new folder <code>First-work_1</code> appears with all the project files and full Git history.</div>
+    </div>
+
+    <div class="example">
+      <h3>git status</h3>
+      <p class="scenario">Scenario: You edited a file and want to see what Git knows.</p>
+      <div class="label">You run:</div>
+      <pre><code>git status</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">On branch main
+Changes not staged for commit:
+  <span class="red">modified:   README.md</span>
+
+Untracked files:
+  <span class="red">notes.md</span></div>
+      <div class="effect"><strong>Effect:</strong> Nothing changes. This command only <em>reads</em> — it tells you what's edited (red) and what's new but untracked.</div>
+    </div>
+
+    <div class="example">
+      <h3>git add .</h3>
+      <p class="scenario">Scenario: You're ready to save your changes — first you have to "stage" them.</p>
+      <div class="label">You run:</div>
+      <pre><code>git add .</code></pre>
+      <div class="label">Then run <code>git status</code> and you see:</div>
+      <div class="output">Changes to be committed:
+  <span class="green">modified:   README.md</span>
+  <span class="green">new file:   notes.md</span></div>
+      <div class="effect"><strong>Effect:</strong> Files moved from "modified" (red) to "staged" (green). They're queued up — but not saved yet.</div>
+    </div>
+
+    <div class="example">
+      <h3>git commit -m</h3>
+      <p class="scenario">Scenario: Save your staged changes as a snapshot in history.</p>
+      <div class="label">You run:</div>
+      <pre><code>git commit -m "add notes file and update readme"</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">[main 7a3b1c2] add notes file and update readme
+ 2 files changed, 12 insertions(+)
+ create mode 100644 notes.md</div>
+      <div class="effect"><strong>Effect:</strong> A new commit (<code>7a3b1c2</code>) is added to your local history. Still local — GitHub doesn't know yet.</div>
+    </div>
+
+    <div class="example">
+      <h3>git push</h3>
+      <p class="scenario">Scenario: Send your commits to GitHub so they're backed up and visible online.</p>
+      <div class="label">You run:</div>
+      <pre><code>git push</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">Enumerating objects: 5, done.
+Writing objects: 100% (3/3), 412 bytes
+To https://github.com/winrt-pin/First-work_1.git
+   dbb061a..7a3b1c2  main -> main</div>
+      <div class="effect"><strong>Effect:</strong> Your local commits are uploaded. Refresh GitHub and you'll see them in the repo.</div>
+    </div>
+
+    <div class="example">
+      <h3>git pull</h3>
+      <p class="scenario">Scenario: Someone else (or you on another computer) pushed changes — you want them.</p>
+      <div class="label">You run:</div>
+      <pre><code>git pull</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">Updating 7a3b1c2..f9c4d11
+Fast-forward
+ README.md | 3 +++
+ 1 file changed, 3 insertions(+)</div>
+      <div class="effect"><strong>Effect:</strong> Your local files update with the new changes from GitHub.</div>
+    </div>
+
+    <div class="example">
+      <h3>git checkout -b</h3>
+      <p class="scenario">Scenario: You want to try something risky without breaking <code>main</code>.</p>
+      <div class="label">You run:</div>
+      <pre><code>git checkout -b add-dark-mode</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">Switched to a new branch 'add-dark-mode'</div>
+      <div class="effect"><strong>Effect:</strong> A new branch is created from your current spot. Any new commits go on this branch — <code>main</code> stays untouched.</div>
+    </div>
+
+    <div class="example">
+      <h3>git merge</h3>
+      <p class="scenario">Scenario: Your branch is ready — bring its changes into <code>main</code>.</p>
+      <div class="label">You run:</div>
+      <pre><code>git checkout main
+git merge add-dark-mode</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">Updating f9c4d11..b2e8a04
+Fast-forward
+ style.css | 8 ++++++++
+ 1 file changed, 8 insertions(+)</div>
+      <div class="effect"><strong>Effect:</strong> The branch's commits are now part of <code>main</code>'s history. The branch label still exists until you delete it.</div>
+    </div>
+
+    <div class="example">
+      <h3>git log --oneline</h3>
+      <p class="scenario">Scenario: See your project's commit history at a glance.</p>
+      <div class="label">You run:</div>
+      <pre><code>git log --oneline</code></pre>
+      <div class="label">You see:</div>
+      <div class="output"><span class="yellow">b2e8a04</span> add dark mode styles
+<span class="yellow">f9c4d11</span> update readme
+<span class="yellow">7a3b1c2</span> add notes file
+<span class="yellow">dbb061a</span> first commit</div>
+      <div class="effect"><strong>Effect:</strong> Read-only — shows you the timeline. Each line: short hash + commit message.</div>
+    </div>
+
+    <div class="example">
+      <h3>git diff</h3>
+      <p class="scenario">Scenario: You edited a file but forgot what you changed.</p>
+      <div class="label">You run:</div>
+      <pre><code>git diff</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">diff --git a/README.md b/README.md
+@@ -1,3 +1,4 @@
+ # Test_1Time
+
+ My first GitHub repo
+<span class="green">+Now learning branches!</span></div>
+      <div class="effect"><strong>Effect:</strong> Read-only. Green lines = added, red lines = removed.</div>
+    </div>
+
+    <div class="example">
+      <h3>git restore</h3>
+      <p class="scenario">Scenario: You messed up a file — want to throw away your changes.</p>
+      <div class="label">You run:</div>
+      <pre><code>git restore README.md</code></pre>
+      <div class="label">You see:</div>
+      <div class="output"><span class="gray">(no output — silent success)</span></div>
+      <div class="effect"><strong>Effect:</strong> ⚠️ Your unsaved edits to <code>README.md</code> are <strong>gone forever</strong>. The file goes back to its last committed state.</div>
+    </div>
+
+    <div class="example">
+      <h3>git branch -d</h3>
+      <p class="scenario">Scenario: You merged a branch — time to clean it up.</p>
+      <div class="label">You run:</div>
+      <pre><code>git branch -d add-dark-mode</code></pre>
+      <div class="label">You see:</div>
+      <div class="output">Deleted branch add-dark-mode (was b2e8a04).</div>
+      <div class="effect"><strong>Effect:</strong> The branch label is gone. The commits stay (they're now part of <code>main</code>'s history).</div>
+    </div>
+  </div>
+
+  <footer>
+    Made by <a href="https://github.com/winrt-pin">winrt-pin</a> · Open source on <a href="https://github.com/winrt-pin/First-work_1">GitHub</a>
+  </footer>
+
+  <script>
+    function showTab(id) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
